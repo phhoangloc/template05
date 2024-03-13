@@ -21,7 +21,9 @@ const Input = ({ onChange, name, value, type, onfocus }: Props) => {
 
     const [focus, setFocus] = useState<boolean>(false)
     return (
-        <div className={`input ${focus || value ? currentTheme ? "input_focus" : "" : ""} `}>
+        <div className={`input ${focus || value ? "input_focus" : ""} `}
+            style={currentTheme ? {} : { color: "white" }}
+        >
             <p className={`name ${focus || value ? "name_focus" : ""}`} >{name}</p>
             <input className="input_box"
                 value={value}

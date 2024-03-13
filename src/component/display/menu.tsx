@@ -43,12 +43,12 @@ const Menu = ({ admin }: props) => {
                     {
                         name: "Log In",
                         icon: <LoginIcon />,
-                        link: "/login"
+                        link: "/admin/login"
                     },
                     {
                         name: "Sign Up",
                         icon: <ShoppingCartIcon />,
-                        link: "/signup"
+                        link: "/admin/signup"
                     }
                 ]
             },
@@ -61,7 +61,7 @@ const Menu = ({ admin }: props) => {
                     {
                         name: "chat",
                         icon: <ForumIcon />,
-                        link: "/chat"
+                        link: "/admin/chat"
                     },
                     {
                         name: "Blog",
@@ -76,7 +76,7 @@ const Menu = ({ admin }: props) => {
                     {
                         name: "Picture",
                         icon: <PhotoIcon />,
-                        link: "/admin/phôtp"
+                        link: "/admin/photo"
                     }
                 ]
             }]

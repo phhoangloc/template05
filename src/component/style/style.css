@@ -281,7 +281,7 @@
 }
 
 .input_focus {
-  border: 2px solid;
+  border: 1px solid;
   border-radius: 5px;
   color: var(--main);
 }
@@ -384,7 +384,7 @@
   font-size: 0.9rem;
   opacity: 0.75;
   width: max-content;
-  margin: auto;
+  margin: 0px 0px 0px 10px;
 }
 
 .menu .item {
@@ -397,6 +397,7 @@
   font-weight: bold;
   width: 0;
   overflow: hidden;
+  margin: inherit;
 }
 
 .menu .child {
