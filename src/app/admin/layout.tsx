@@ -1,7 +1,6 @@
 import React from 'react'
-import header from '@/component/header'
-import Menu from '@/component/menu'
-import Header from '@/component/header'
+import Menu from '@/component/display/menu'
+import Header from '@/component/display/header'
 type Props = {
     children: React.ReactNode
 }

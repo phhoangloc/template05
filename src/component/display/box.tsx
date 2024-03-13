@@ -5,11 +5,12 @@ type Props = {
     children: React.ReactNode,
     cn?: string,
     aspectRatio?: number,
+    borderRadius?: string,
     bg?: boolean,
     boxShadow?: boolean
 }
 
-const Box = ({ children, cn, aspectRatio, bg, boxShadow }: Props) => {
+const Box = ({ children, cn, aspectRatio, bg, boxShadow, borderRadius }: Props) => {
     const [currentTheme, setCurrentTheme] = useState<boolean>(store.getState().theme)
 
     const update = () => {
@@ -19,7 +20,7 @@ const Box = ({ children, cn, aspectRatio, bg, boxShadow }: Props) => {
     update()
     return (
         <div className={`${cn ? cn : "box"} ${bg ? currentTheme ? "background_light" : "background_dark" : ""} ${boxShadow ? "boxShadow" : ""}`}
-            style={{ aspectRatio: aspectRatio ? aspectRatio : 1 }}
+            style={{ aspectRatio: aspectRatio ? aspectRatio : 1, borderRadius: borderRadius ? borderRadius : "5px" }}
         >{children}</div>
     )
 }

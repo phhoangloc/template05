@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import store from '@/redux/store'
-import "./style/style.css"
+import "../style/style.css"
 
 type Props = {
     children: React.ReactNode

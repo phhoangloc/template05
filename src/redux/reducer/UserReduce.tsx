@@ -11,7 +11,7 @@ export type UserLoginType = {
     position: string,
     pic: []
     carts: []
-}
+} | undefined
 
 const UserReducer = createSlice({
     name: "User",
