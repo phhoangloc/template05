@@ -8,9 +8,10 @@ type Props = {
     borderRadius?: string,
     bg?: boolean,
     boxShadow?: boolean
+    onClick?: () => void
 }
 
-const Box = ({ children, cn, aspectRatio, bg, boxShadow, borderRadius }: Props) => {
+const Box = ({ children, cn, aspectRatio, bg, boxShadow, borderRadius, onClick }: Props) => {
     const [currentTheme, setCurrentTheme] = useState<boolean>(store.getState().theme)
 
     const update = () => {
@@ -21,6 +22,7 @@ const Box = ({ children, cn, aspectRatio, bg, boxShadow, borderRadius }: Props) 
     return (
         <div className={`${cn ? cn : "box"} ${bg ? currentTheme ? "background_light" : "background_dark" : ""} ${boxShadow ? "boxShadow" : ""}`}
             style={{ aspectRatio: aspectRatio ? aspectRatio : 1, borderRadius: borderRadius ? borderRadius : "5px" }}
+            onClick={() => onClick && onClick()}
         >{children}</div>
     )
 }

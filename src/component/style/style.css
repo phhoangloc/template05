@@ -362,7 +362,6 @@
   display: flex;
   justify-content: space-between;
   height: 50px;
-  box-shadow: 0px 1px 10px -5px black;
 }
 
 .header .icons img {
@@ -401,7 +400,7 @@
 }
 
 .menu .child {
-  opacity: 0.75;
+  opacity: 0.5;
   height: 40px;
 }
 

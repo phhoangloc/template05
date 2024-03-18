@@ -41,7 +41,7 @@ const Header = ({ admin }: Props) => {
     }
     useEffect(() => {
         currentAlert.value && localStorage.clear()
-        toPage.push("/admin")
+        currentAlert.value && toPage.push("/admin")
     }, [currentAlert.value])
     if (admin) {
 

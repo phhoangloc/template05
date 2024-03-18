@@ -27,7 +27,7 @@ const Menu = ({ admin }: props) => {
 
     update()
 
-    const [i, setI] = useState<number>(-1)
+    const [i, setI] = useState<number>(0)
 
     if (admin) {
         const menus = [
@@ -52,10 +52,8 @@ const Menu = ({ admin }: props) => {
                     }
                 ]
             },
-        ]
-        const apps = [
             {
-                name: "Ecommerce",
+                name: "App",
                 icon: <AppsIcon />,
                 children: [
                     {
@@ -79,13 +77,14 @@ const Menu = ({ admin }: props) => {
                         link: "/admin/photo"
                     }
                 ]
-            }]
+            }
+        ]
         return (
             <div className={`menu ${currentMenu ? "menuOpen" : ""}`}>
                 {
                     menus.map((item: any, index: number) =>
                         <div key={index}>
-                            <div className='item' key={index} onClick={() => { item.link && toPage.push(item.link), setI(index) }}>
+                            <div className='item' onClick={() => { item.link && toPage.push(item.link), setI(index) }}>
                                 {item.icon}
                                 <p className='title'>{item.name}</p>
                             </div>
@@ -96,28 +95,6 @@ const Menu = ({ admin }: props) => {
                                         <p className='title'>{child.name}</p>
                                     </div>
                                 )
-
-                            }
-                        </div>
-                    )
-
-                }
-                <p>app</p>
-                {
-                    apps.map((item: any, index: number) =>
-                        <div key={index}>
-                            <div className='item' key={index} onClick={() => { item.link && toPage.push(item.link), setI(index) }}>
-                                {item.icon}
-                                <p className='title'>{item.name}</p>
-                            </div>
-                            {
-                                index === i && item?.children?.map((child: any, index_2: number) =>
-                                    <div className='item child' key={index_2} onClick={() => { child.link && toPage.push(child.link) }}>
-                                        {child.icon}
-                                        <p className='title'>{child.name}</p>
-                                    </div>
-                                )
-
                             }
                         </div>
                     )
