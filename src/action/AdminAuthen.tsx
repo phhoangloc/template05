@@ -72,28 +72,7 @@ const deletePic = async (name: string, id: string) => {
     return result.data
 }
 
-const getBlog = async () => {
-    const result = await axios.get(process.env.server_url + "admin/blog",
-        {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': localStorage.token,
-            },
-        }
-    )
-    return result.data
-}
-const getBlogBySlug = async (slug: string) => {
-    const result = await axios.get(process.env.server_url + "admin/blog?slug=" + slug,
-        {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': localStorage.token,
-            },
-        }
-    )
-    return result.data
-}
+
 export const AdminAuthen = {
     getItem,
     getItemById,
@@ -102,5 +81,4 @@ export const AdminAuthen = {
     uploadFile,
     getPic,
     deletePic,
-    getBlog,
 }

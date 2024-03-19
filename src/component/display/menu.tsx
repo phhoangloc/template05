@@ -5,7 +5,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import LockIcon from '@mui/icons-material/Lock';
 import store from '@/redux/store';
 import LoginIcon from '@mui/icons-material/Login';
-import LogoutIcon from '@mui/icons-material/Logout';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
 import AppsIcon from '@mui/icons-material/Apps';
 import ForumIcon from '@mui/icons-material/Forum';
 import ArticleIcon from '@mui/icons-material/Article';
@@ -47,7 +47,7 @@ const Menu = ({ admin }: props) => {
                     },
                     {
                         name: "Sign Up",
-                        icon: <LogoutIcon />,
+                        icon: <HowToRegIcon />,
                         link: "/admin/signup"
                     }
                 ]

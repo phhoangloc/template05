@@ -15,17 +15,6 @@ type Props = {
 
 const page = ({ params }: Props) => {
 
-    const [blogs, setBlogs] = useState<any[]>([])
-
-    const getBlog = async () => {
-        const result = await AdminAuthen.getBlog()
-        setBlogs(result.data)
-    }
-
-    useEffect(() => {
-        getBlog()
-    }, [])
-
     switch (params.archive) {
         case "login":
             return <Archive><Login /></Archive>

@@ -9,6 +9,8 @@ import Input from '../input/input'
 import Grid from './grid'
 import Box from './box'
 import TextArea from '../input/textarea'
+import { AdminAuthen } from '@/action/AdminAuthen'
+import { setRefresh } from '@/redux/reducer/RefreshReduce'
 type Props = {
     genre: string,
     data: any
@@ -29,12 +31,18 @@ const Detail = ({ genre, data }: Props) => {
     const [title, setTitle] = useState<string>(data.title)
     const [content, setContent] = useState<string>(data.content)
 
+    const updateBlog = async (body: any) => {
+        const result = await AdminAuthen.editItem("blog", data._id, body)
+        if (result.success) {
+            store.dispatch(setRefresh())
+        }
+    }
     switch (genre) {
         case "blog":
             return (
                 <div className='detail'>
                     <div className="detail_header" style={{ margin: "0 10px" }}>
-                        <Toogle func={(v) => setEdit(v)} save={() => console.log({ title, content })} />
+                        <Toogle func={(v) => setEdit(v)} save={() => updateBlog({ title, detail: content })} />
                     </div>
                     {edit ?
                         <Grid>
@@ -47,8 +55,8 @@ const Detail = ({ genre, data }: Props) => {
                             </Box>
                         </Grid> :
                         <Grid>
-                            <Box cn={`center xs12 md6 lg4 boxShadow ${currentTheme ? "background_light" : "background_dark"}`} sx={{ margin: "auto", borderRadius: "5px" }}>
-                                <Image src={process.env.google_url + data?.cover} width={500} height={500} alt='cover' style={{ width: "90%", height: "auto", margin: "5% auto", borderRadius: "5px" }} />
+                            <Box cn={`center xs12 md6 lg4 boxShadow  ${currentTheme ? "background_light" : "background_dark"}`} sx={{ margin: "auto", borderRadius: "5px" }}>
+                                <Image src={process.env.google_url + data?.cover} width={500} height={500} alt='cover' style={{ width: "90%", height: "auto", margin: "5% auto 0", borderRadius: "5px" }} />
                                 <h3 style={{ width: "90%", margin: "auto", textAlign: "center", padding: "20px 0", fontSize: "0.9rem" }}>{data?.title}</h3>
                             </Box>
                             <Box cn={`detailBox scrollNone xs12 md6 lg8 `} sx={{ margin: "10px", overflowX: "hidden" }}>
@@ -78,8 +86,8 @@ const Detail = ({ genre, data }: Props) => {
                             </Box>
                         </Grid> :
                         <Grid>
-                            <Box cn={`center xs12 md6 lg4 boxShadow ${currentTheme ? "background_light" : "background_dark"}`} sx={{ margin: "10px auto" }}>
-                                <Image src={process.env.google_url + data?.img[data.img.length - 1].name} width={500} height={500} alt='cover' style={{ width: "100%", height: "auto" }} />
+                            <Box cn={`center xs12 md6 lg4 boxShadow  ${currentTheme ? "background_light" : "background_dark"}`} sx={{ margin: "auto", borderRadius: "5px" }}>
+                                <Image src={process.env.google_url + data?.img[data.img.length - 1].name} width={500} height={500} alt='cover' style={{ width: "90%", height: "auto", margin: "5% auto 0", borderRadius: "5px" }} />
                                 <h3 style={{ width: "90%", margin: "auto", textAlign: "center", padding: "20px 0", fontSize: "0.9rem" }}>{data?.name}</h3>
                             </Box>
                             <Box cn={`detailBox scrollNone  xs12 md6 lg8 `} sx={{ margin: "10px", overflowX: "hidden" }}>
