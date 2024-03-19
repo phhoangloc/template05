@@ -27,28 +27,28 @@ const Provider = ({ children }: Props) => {
 
     const [loading, setLoading] = useState<boolean>(true)
 
-    // const checkLogin = async () => {
-    //     const result = await UserAuthen.checkLogin()
-    //     if (result.success) {
-    //         const _id = result.data._id
-    //         const username = result.data.username
-    //         const email = result.data.email
-    //         const avata = result.data.avata
-    //         const background = result.data.background
-    //         const position = result.data.position
-    //         const pic = result.data.pic
-    //         const carts = result.data.carts
-    //         store.dispatch(setUser({ _id, username, email, avata, background, position, pic, carts }))
-    //         setLoading(false)
-    //     } else {
-    //         store.dispatch(setUser(undefined))
-    //         setLoading(false)
-    //     }
-    // }
+    const checkLogin = async () => {
+        const result = await UserAuthen.checkLogin()
+        if (result.success) {
+            const _id = result.data._id
+            const username = result.data.username
+            const email = result.data.email
+            const avata = result.data.avata
+            const background = result.data.background
+            const position = result.data.position
+            const pic = result.data.pic
+            const carts = result.data.carts
+            store.dispatch(setUser({ _id, username, email, avata, background, position, pic, carts }))
+            setLoading(false)
+        } else {
+            store.dispatch(setUser(undefined))
+            setLoading(false)
+        }
+    }
 
-    // useEffect(() => {
-    //     checkLogin()
-    // }, [currentRefresh])
+    useEffect(() => {
+        checkLogin()
+    }, [currentRefresh])
 
     const scroll: any = useRef()
     const [scrollTop, setScrollTop] = useState<number>(0)
@@ -67,7 +67,7 @@ const Provider = ({ children }: Props) => {
         <div className={`provider ${currentTheme ? "light" : "dark"}`} ref={scroll} onScroll={() => getScroll()} >
             <NoticeModal />
             <AlertModal />
-            {children}
+            {loading ? <Loading /> : children}
             <Scrollbar scrTop={scrollTop} scrHeight={scrollHeight} onScroll={onScroll} />
         </div>
 

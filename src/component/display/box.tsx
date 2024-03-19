@@ -4,14 +4,12 @@ import store from '@/redux/store'
 type Props = {
     children: React.ReactNode,
     cn?: string,
-    aspectRatio?: number,
-    borderRadius?: string,
-    bg?: boolean,
-    boxShadow?: boolean
+    sx?: {},
+    bg?: boolean
     onClick?: () => void
 }
 
-const Box = ({ children, cn, aspectRatio, bg, boxShadow, borderRadius, onClick }: Props) => {
+const Box = ({ children, cn, sx, bg, onClick }: Props) => {
     const [currentTheme, setCurrentTheme] = useState<boolean>(store.getState().theme)
 
     const update = () => {
@@ -20,8 +18,8 @@ const Box = ({ children, cn, aspectRatio, bg, boxShadow, borderRadius, onClick }
 
     update()
     return (
-        <div className={`${cn ? cn : "box"} ${bg ? currentTheme ? "background_light" : "background_dark" : ""} ${boxShadow ? "boxShadow" : ""}`}
-            style={{ aspectRatio: aspectRatio ? aspectRatio : 1, borderRadius: borderRadius ? borderRadius : "5px" }}
+        <div className={`${cn ? cn : "box"} ${bg ? currentTheme ? "background_light" : "background_dark" : ""}`}
+            style={sx}
             onClick={() => onClick && onClick()}
         >{children}</div>
     )

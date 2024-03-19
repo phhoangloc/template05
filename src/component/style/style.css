@@ -305,6 +305,52 @@
   cursor: pointer;
 }
 
+.toogle {
+  display: flex;
+  width: max-content;
+  margin: auto 0;
+}
+
+.toogle .toogle_control {
+  width: 40px;
+  height: 10px;
+  border: var(--border);
+  border-radius: 25px;
+  position: relative;
+  margin: 10px 0;
+}
+
+.toogle .toogle_control .toogle_button {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: var(--main);
+  top: -50%;
+  transition: all 0.25s;
+  cursor: pointer;
+  position: absolute;
+  z-index: 2;
+  left: 0;
+}
+
+.toogle .toogle_control .true {
+  left: 25px;
+}
+
+.toogle p {
+  margin: 0 10px;
+  line-height: 30px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  width: 50px;
+  text-align: center;
+}
+
+.toogle p:hover {
+  color: var(--main);
+  text-decoration: underline;
+}
+
 .divider {
   border: var(--border);
   padding: 5px;
@@ -340,6 +386,70 @@
 
 .dividerOpen {
   transform: translateX(0%);
+}
+
+.picturePreview {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.picturePreview .imageface {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(68, 68, 68, 0.5);
+}
+
+.picturePreview .imageface svg {
+  margin: auto;
+  width: 100px !important;
+  height: 100px !important;
+  opacity: 0.5;
+}
+
+.picturePreview .upload_button {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.textarea {
+  position: relative;
+}
+
+.textarea .name {
+  position: absolute;
+  top: 0;
+  transition: all 0.5s;
+}
+
+.textarea .name_focus {
+  transform: translateY(-20px);
+  opacity: 0;
+}
+
+.textarea .input_box {
+  color: unset !important;
+}
+
+.textarea .input_box p {
+  color: inherit !important;
+  background-color: inherit !important;
+  font-family: '__Inter_aaf875' !important;
+  text-align: justify;
+}
+
+.textarea .input_box p span {
+  color: inherit !important;
+}
+
+.textarea .input_box img {
+  width: 100%;
+}
+
+.textarea .input_box:focus {
+  outline: none;
 }
 
 .scroll_bar {
@@ -450,6 +560,63 @@
   .archive_open {
     width: calc(100vw - 250px);
   }
+}
+
+.detail .detail_header {
+  height: 30px;
+}
+
+.detail .grid_box .box .input {
+  margin: 5px 0;
+}
+
+.detail .grid_box .box .input .name_focus {
+  top: 5px;
+}
+
+.detail .grid_box .box .input_focus {
+  border: none;
+}
+
+.detail .grid_box .box .textarea {
+  margin: 20px 0 0;
+}
+
+.detail .grid_box .box .textarea .input_box {
+  margin: 5%;
+  text-align: justify;
+}
+
+.detail .grid_box .box .textarea_focus {
+  border: var(--border);
+}
+
+@media (min-width: 768px) {
+  .detail .grid_box .detailBox {
+    height: calc(100vh - 100px);
+  }
+}
+
+.detail .grid_box .detailBox .innerDetail {
+  padding: 5%;
+}
+
+.detail .grid_box .detailBox .innerDetail img {
+  width: 100%;
+}
+
+.detail .grid_box .detailBox .innerDetail p span {
+  color: inherit !important;
+}
+
+.detail .detail_main {
+  position: relative;
+  height: calc(100vh - 80px);
+  overflow-x: scroll;
+}
+
+.detail .detail_main::-webkit-scrollbar {
+  display: none;
 }
 
 .login {

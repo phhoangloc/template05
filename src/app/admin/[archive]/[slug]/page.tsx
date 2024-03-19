@@ -1,6 +1,9 @@
+'use client'
+import { AdminAuthen } from '@/action/AdminAuthen'
 import NotFound from '@/app/not-found'
 import Archive from '@/component/display/archive'
-import React from 'react'
+import Detail from '@/component/display/detail'
+import React, { useEffect, useState } from 'react'
 
 type Props = {
     params: {
@@ -10,22 +13,28 @@ type Props = {
 }
 
 const page = ({ params }: Props) => {
-    const blog =
-    {
-        pic: "/img/blog.jpeg",
-        name: "hello! how are you?",
-        archive: "blog",
-        slug: "hello"
+    const [item, setItem] = useState<any>({})
+
+    const getBlogBySlug = async (archive: string, slug: string) => {
+        const result = await AdminAuthen.getItemBySlug(archive, slug)
+        setItem(result.data[0])
     }
-    if (params.archive === blog.archive && params.slug === blog.slug) {
+
+    useEffect(() => {
+        getBlogBySlug(params.archive, params.slug)
+    }, [params.slug])
+
+    // console.log(item._id)
+    if (item?._id) {
         return (
             <Archive>
-                <h1>{blog.archive}</h1>
-                <h1>{blog.slug}</h1>
+                <Detail genre={params.archive} data={item} />
             </Archive>
         )
     }
-    return <Archive><NotFound /></Archive>
+    return <Archive>
+        <NotFound />
+    </Archive>
 }
 
 export default page

@@ -1,3 +1,4 @@
+
 import axios from "axios"
 const getItem = async (a: string) => {
     const result = await axios.get(process.env.server_url + `admin/${a}`, {
@@ -9,7 +10,7 @@ const getItem = async (a: string) => {
     return result.data
 }
 
-const getItemDetail = async (a: string, id: string) => {
+const getItemById = async (a: string, id: string) => {
     const result = await axios.get(process.env.server_url + `admin/${a}?id=${id}`, {
         headers: {
             'Content-Type': 'application/json',
@@ -17,7 +18,15 @@ const getItemDetail = async (a: string, id: string) => {
         },
     })
     return result.data
-    // console.log(a, s)
+}
+const getItemBySlug = async (a: string, slug: string) => {
+    const result = await axios.get(process.env.server_url + `admin/${a}?slug=${slug}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': localStorage && localStorage.token
+        },
+    })
+    return result.data
 }
 const editItem = async (a: string, id: string, body: {}) => {
     const result = await axios.put(process.env.server_url + `admin/${a}?id=${id}`, body, {
@@ -62,11 +71,36 @@ const deletePic = async (name: string, id: string) => {
     )
     return result.data
 }
+
+const getBlog = async () => {
+    const result = await axios.get(process.env.server_url + "admin/blog",
+        {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': localStorage.token,
+            },
+        }
+    )
+    return result.data
+}
+const getBlogBySlug = async (slug: string) => {
+    const result = await axios.get(process.env.server_url + "admin/blog?slug=" + slug,
+        {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': localStorage.token,
+            },
+        }
+    )
+    return result.data
+}
 export const AdminAuthen = {
     getItem,
-    getItemDetail,
+    getItemById,
+    getItemBySlug,
     editItem,
     uploadFile,
     getPic,
     deletePic,
+    getBlog,
 }

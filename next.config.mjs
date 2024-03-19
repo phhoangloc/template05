@@ -16,8 +16,8 @@ const nextConfig = {
     },
 
     env: {
-        server_url_: "http://localhost:4000/",
-        server_url: "https://be-mywatch.vercel.app/",
+        server_url: "http://localhost:4000/",
+        server_url_: "https://be-mywatch.vercel.app/",
         google_url: "https://drive.google.com/uc?id="
     }
 };

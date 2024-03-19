@@ -1,64 +1,31 @@
 'use client'
+import { AdminAuthen } from '@/action/AdminAuthen'
 import NotFound from '@/app/not-found'
 import Login from '@/component/auth/login'
 import Signup from '@/component/auth/signup'
 import Archive from '@/component/display/archive'
-import Box from '@/component/display/box'
 import Grid from '@/component/display/grid'
-import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import React from 'react'
+
+import React, { useEffect, useState } from 'react'
 
 type Props = {
     params: { archive: string }
 }
 
+
 const page = ({ params }: Props) => {
 
-    const blogs = [
-        {
-            pic: "/img/blog.jpeg",
-            name: "hello! how are you?",
-            slug: "hello"
-        },
-        {
-            pic: "/img/blog.jpeg",
-            name: "hello! how are you?",
-            slug: "hello"
-        },
-        {
-            pic: "/img/blog.jpeg",
-            name: "hello! how are you?",
-            slug: "hello"
-        },
-        {
-            pic: "/img/blog.jpeg",
-            name: "hello! how are you?",
-            slug: "hello"
-        },
-        {
-            pic: "/img/blog.jpeg",
-            name: "hello! how are you?",
-            slug: "hello"
-        },
-        {
-            pic: "/img/blog.jpeg",
-            name: "hello! how are you?",
-            slug: "hello"
-        },
-        {
-            pic: "/img/blog.jpeg",
-            name: "hello! how are you?",
-            slug: "hello"
-        },
-        {
-            pic: "/img/blog.jpeg",
-            name: "hello! how are you?",
-            slug: "hello"
-        },
-    ]
+    const [blogs, setBlogs] = useState<any[]>([])
 
-    const toPage = useRouter()
+    const getBlog = async () => {
+        const result = await AdminAuthen.getBlog()
+        setBlogs(result.data)
+    }
+
+    useEffect(() => {
+        getBlog()
+    }, [])
+
     switch (params.archive) {
         case "login":
             return <Archive><Login /></Archive>
@@ -69,16 +36,12 @@ const page = ({ params }: Props) => {
         case "photo":
             return <Archive>{params.archive}</Archive>
         case "blog":
+        case "watch":
             return <Archive>
-                <Grid>
-                    {
-                        blogs?.map((item, index) =>
-                            <Box aspectRatio={1} cn=' xs12 sm6 md4 lg3' key={index} onClick={() => toPage.push("blog/" + item.slug)} >
-                                <Image src={item.pic} alt='pic' width={100} height={100} style={{ width: "100%", height: "auto" }} />
-                                <p>{item.name}</p>
-                            </Box>)
-                    }
-                </Grid>
+                <div className="archive_header">
+                    header
+                </div>
+                <Grid archive={params.archive} view='item' />
             </Archive>
 
     }
@@ -87,5 +50,4 @@ const page = ({ params }: Props) => {
         <NotFound />
     )
 }
-
 export default page

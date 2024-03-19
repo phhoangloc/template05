@@ -5,7 +5,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import LockIcon from '@mui/icons-material/Lock';
 import store from '@/redux/store';
 import LoginIcon from '@mui/icons-material/Login';
-import HowToRegIcon from '@mui/icons-material/HowToReg';
+import LogoutIcon from '@mui/icons-material/Logout';
 import AppsIcon from '@mui/icons-material/Apps';
 import ForumIcon from '@mui/icons-material/Forum';
 import ArticleIcon from '@mui/icons-material/Article';
@@ -47,7 +47,7 @@ const Menu = ({ admin }: props) => {
                     },
                     {
                         name: "Sign Up",
-                        icon: <ShoppingCartIcon />,
+                        icon: <LogoutIcon />,
                         link: "/admin/signup"
                     }
                 ]
@@ -57,7 +57,7 @@ const Menu = ({ admin }: props) => {
                 icon: <AppsIcon />,
                 children: [
                     {
-                        name: "chat",
+                        name: "Chat",
                         icon: <ForumIcon />,
                         link: "/admin/chat"
                     },
@@ -69,7 +69,7 @@ const Menu = ({ admin }: props) => {
                     {
                         name: "Ecommerce",
                         icon: <ShoppingCartIcon />,
-                        link: "/admin/product"
+                        link: "/admin/watch"
                     },
                     {
                         name: "Picture",
