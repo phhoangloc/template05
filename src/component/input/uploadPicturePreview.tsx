@@ -6,7 +6,7 @@ type Props = {
     icon: React.ReactNode | string;
     src?: any,
     size?: number,
-    func?: (e: File) => void
+    func?: (e: File) => void,
 }
 
 const UploadPicturePreview = ({ size, src, icon, func }: Props) => {

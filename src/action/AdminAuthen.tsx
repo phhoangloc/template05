@@ -28,6 +28,15 @@ const getItemBySlug = async (a: string, slug: string) => {
     })
     return result.data
 }
+const createItem = async (a: string, body: {}) => {
+    const result = await axios.post(process.env.server_url + `admin/${a}`, body, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': localStorage && localStorage.token
+        },
+    })
+    return result.data
+}
 const editItem = async (a: string, id: string, body: {}) => {
     const result = await axios.put(process.env.server_url + `admin/${a}?id=${id}`, body, {
         headers: {
@@ -77,6 +86,7 @@ export const AdminAuthen = {
     getItem,
     getItemById,
     getItemBySlug,
+    createItem,
     editItem,
     uploadFile,
     getPic,

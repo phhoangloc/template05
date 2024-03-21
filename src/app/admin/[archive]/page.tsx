@@ -20,19 +20,15 @@ const page = ({ params }: Props) => {
             return <Archive><Login /></Archive>
         case "signup":
             return <Archive><Signup /></Archive>
-        case "chat":
-        case "product":
         case "photo":
-            return <Archive>{params.archive}</Archive>
+            return <Archive>
+                <Grid archive={"pic"} view='picture' edit={true} />
+            </Archive>
         case "blog":
         case "watch":
             return <Archive>
-                <div className="archive_header">
-                    header
-                </div>
-                <Grid archive={params.archive} view='item' />
+                <Grid archive={params.archive} view='item' edit={true} />
             </Archive>
-
     }
 
     return (

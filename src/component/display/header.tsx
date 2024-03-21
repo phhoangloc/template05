@@ -35,13 +35,18 @@ const Header = ({ admin }: Props) => {
 
     const toPage = useRouter()
     const [modalOpen, setModalOpen] = useState<boolean>(false)
+    const [wannaLogout, setWannaLogout] = useState<boolean>(false)
 
     const Logout = () => {
         store.dispatch(setAlert({ value: false, open: true, msg: "bạn có muốn log out không" }))
     }
     useEffect(() => {
-        currentAlert.value && localStorage.clear()
-        currentAlert.value && toPage.push("/admin")
+        if (wannaLogout && currentAlert.value) {
+            localStorage.clear()
+            window.location.reload()
+        } else {
+            setWannaLogout(false)
+        }
     }, [currentAlert.value])
     if (admin) {
 
@@ -54,7 +59,7 @@ const Header = ({ admin }: Props) => {
                         <Image src={process.env.google_url + currentUser?.avata?.name} alt='avata' width={500} height={500} onClick={() => setModalOpen(!modalOpen)} /> :
                         <PersonIcon onClick={() => setModalOpen(true)} />}
                     {<Divider
-                        data={currentUser?._id ? [{ name: "Profile", link: "/admin/profile" }, { name: "Log Out", func: () => Logout() }] : [{ name: "Log In", link: "/login" }, { name: "Sign Up", link: "signup" }]}
+                        data={currentUser?._id ? [{ name: "Profile", link: "/admin/profile" }, { name: "Log Out", func: () => { setWannaLogout(true), Logout() } }] : [{ name: "Log In", link: "/login" }, { name: "Sign Up", link: "signup" }]}
                         sx={{ position: "absolute", top: 55, right: 5, zIndex: 2 }}
                         modalOpen={modalOpen}
                         closeModal={() => setModalOpen(false)} />}
