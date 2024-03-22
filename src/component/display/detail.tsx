@@ -13,6 +13,8 @@ import { AdminAuthen } from '@/action/AdminAuthen'
 import { setRefresh } from '@/redux/reducer/RefreshReduce'
 import { AlertType } from '@/redux/reducer/alertReducer'
 import { setAlert } from '@/redux/reducer/alertReducer'
+import PictureModal from '../modal/pictureModal'
+import { UserLoginType } from '@/redux/reducer/UserReduce'
 type Props = {
     genre: string,
     data: any
@@ -21,37 +23,42 @@ type Props = {
 const Detail = ({ genre, data }: Props) => {
 
     const [currentTheme, setCurrentTheme] = useState<boolean>(store.getState().theme)
+    const [currentUser, setCurrentUser] = useState<UserLoginType>(store.getState().user)
     const [currentAlert, setCurrentAlert] = useState<AlertType>(store.getState().alert)
 
     const update = () => {
         store.subscribe(() => setCurrentTheme(store.getState().theme))
         store.subscribe(() => setCurrentAlert(store.getState().alert))
+        store.subscribe(() => setCurrentUser(store.getState().user))
     }
 
     update()
 
+    const [loading, setLoading] = useState<boolean>(false)
     const [edit, setEdit] = useState<boolean>(false)
     const [name, setName] = useState<string>(data.name)
     const [title, setTitle] = useState<string>(data.title)
     const [content, setContent] = useState<string>(data.content)
     const [imgFile, setImgFile] = useState<File>()
+    const [imgPreview, setImgPreview] = useState<any>()
+    const [imgPreviewImg, setImgPreviewImg] = useState<any>()
     const [cover, setCover] = useState<any>(data.cover)
 
     const body = {
         name, title, detail: content, cover
     }
-
-    const updateBlog = async (body: any) => {
-        const result = await AdminAuthen.editItem("blog", data._id, body)
+    const updateItem = async (body: any) => {
+        const result = await AdminAuthen.editItem(genre, data._id, body)
         if (result.success) {
             store.dispatch(setRefresh())
         }
     }
     const UploadFile = async (f: File) => {
+        setLoading(true)
         const result = await AdminAuthen.uploadFile(f)
         setCover(result)
+        setLoading(false)
     }
-
     useEffect(() => {
         if (imgFile && currentAlert.value) {
             UploadFile(imgFile)
@@ -60,21 +67,38 @@ const Detail = ({ genre, data }: Props) => {
         }
     }, [currentAlert.value])
 
+    const [openModal, setOpenModal] = useState<boolean>(false)
+
+
     switch (genre) {
         case "blog":
             return (
                 <div className='detail'>
                     <div className="detail_header" style={{ margin: "0 10px" }}>
-                        <Toogle func={(v) => setEdit(v)} save={() => updateBlog(body)} />
+                        <Toogle func={(v) => setEdit(v)} save={() => updateItem(body)} />
                     </div>
                     {edit ?
                         <Grid>
-                            <Box cn='box xs12 ' sx={{ margin: "10px auto", overflow: "hidden", maxWidth: "992px" }}>
-                                <UploadPicturePreview src={process.env.google_url + data?.cover?.name} icon={<AddPhotoAlternateIcon />}
-                                    func={(f) => {
+                            <Box cn='box xs12 ' sx={{ margin: "10px auto", overflow: "hidden", maxWidth: "992px", position: "relative" }}>
+                                <UploadPicturePreview
+                                    src={imgPreviewImg && imgPreviewImg || imgPreview?.name && process.env.google_url + imgPreview?.name || process.env.google_url + data?.cover?.name}
+                                    icon={<AddPhotoAlternateIcon />}
+                                    func={() => {
+                                        setOpenModal(true)
+                                    }}
+                                    loading={loading} />
+                                <PictureModal
+                                    username={currentUser?.username ? currentUser?.username : ""}
+                                    open={openModal}
+                                    close={() => setOpenModal(false)}
+                                    select={(item) => { setCover(item._id); setImgPreview(item); setOpenModal(false) }}
+                                    create={(pre, f) => {
+                                        setImgPreviewImg(pre)
                                         setImgFile(f);
-                                        store.dispatch(setAlert({ value: false, open: true, msg: "bạn có muốn thay đổi hình nền này không?" }))
-                                    }} />
+                                        store.dispatch(setAlert({ value: false, open: true, msg: "bạn có muốn thay đổi hình nền này không?" }));
+                                        setOpenModal(false);
+                                    }}
+                                />
                             </Box>
                             <Box cn='box xs12' bg sx={{ margin: "10px auto", padding: "20px 10px", maxWidth: "992px" }}>
                                 <Input name="title" onChange={e => setTitle(e)} value={title} />
@@ -100,15 +124,33 @@ const Detail = ({ genre, data }: Props) => {
             return (
                 <div className='detail'>
                     <div className="detail_header" style={{ margin: "0 10px" }}>
-                        <Toogle func={(v) => setEdit(v)} save={() => console.log({ name, content })} />
+                        <Toogle func={(v) => setEdit(v)} save={() => updateItem(body)} />
                     </div>
                     {edit ?
                         <Grid>
-                            <Box cn='box xs12 ' sx={{ margin: "10px auto", overflow: "hidden", maxWidth: "992px" }}>
-                                <UploadPicturePreview src={process.env.google_url + data?.img[data.img.length - 1].name} icon={<AddPhotoAlternateIcon />} />
+                            <Box cn='box xs12 ' sx={{ margin: "10px auto", overflow: "hidden", maxWidth: "992px", position: "relative" }}>
+                                <UploadPicturePreview
+                                    src={imgPreviewImg && imgPreviewImg || imgPreview?.name && process.env.google_url + imgPreview?.name || process.env.google_url + data?.img[data.img.length - 1].name}
+                                    icon={<AddPhotoAlternateIcon />}
+                                    func={() => {
+                                        setOpenModal(true)
+                                    }}
+                                    loading={loading} />
+                                <PictureModal
+                                    username={currentUser?.username ? currentUser?.username : ""}
+                                    open={openModal}
+                                    close={() => setOpenModal(false)}
+                                    select={(item) => { setCover(item._id); setImgPreview(item); setOpenModal(false) }}
+                                    create={(pre, f) => {
+                                        setImgPreviewImg(pre)
+                                        setImgFile(f);
+                                        store.dispatch(setAlert({ value: false, open: true, msg: "bạn có muốn thay đổi hình nền này không?" }));
+                                        setOpenModal(false);
+                                    }}
+                                />
                             </Box>
                             <Box cn='box xs12' bg sx={{ margin: "10px auto", padding: "20px 10px", maxWidth: "992px" }}>
-                                <Input name="title" onChange={e => setName(e)} value={name} />
+                                <Input name="name" onChange={e => setName(e)} value={name} />
                                 <TextArea onChange={(e) => setContent(e)} value={data?.detail} name='content' />
                             </Box>
                         </Grid> :

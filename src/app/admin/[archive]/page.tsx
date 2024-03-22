@@ -21,14 +21,22 @@ const page = ({ params }: Props) => {
         case "signup":
             return <Archive><Signup /></Archive>
         case "photo":
-            return <Archive>
-                <Grid archive={"pic"} view='picture' edit={true} />
-            </Archive>
-        case "blog":
-        case "watch":
-            return <Archive>
-                <Grid archive={params.archive} view='item' edit={true} />
-            </Archive>
+            return (
+                <Archive>
+                    {/* <Grid archive={"pic"} view='picture' edit={true} /> */}pic
+                </Archive>)
+        // case "profile":
+        //     return (
+        //         <Archive>
+        //             <Grid archive={""} view='profile' edit={true} />
+        //         </Archive>)
+        // case "blog":
+        // case "watch":
+        //     return (
+        //         <Archive>
+        //             <Grid archive={params.archive} view='item' edit={true} />
+        //         </Archive>
+        //     )
     }
 
     return (

@@ -216,6 +216,49 @@
     }
 }
 
+.pagination {
+    display: flex;
+    width: max-content;
+    margin: 10px auto;
+
+    div {
+        width: 50px;
+        padding: 5px;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    p:hover {
+        color: var(--main);
+    }
+
+    .pageNumber {
+        font-weight: bold;
+        cursor: inherit;
+        color: var(--main);
+    }
+}
+
+.pictureModal {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    margin: 0 !important;
+    backdrop-filter: blur(5px) brightness(0.5);
+
+    .pictureBox {
+        width: 90%;
+        height: 90%;
+        overflow: scroll;
+        margin: 2.5% auto;
+    }
+
+
+}
+
 .scroll_bar {
     position: fixed;
     top: 0;

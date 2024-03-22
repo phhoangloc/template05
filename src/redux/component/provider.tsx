@@ -62,7 +62,6 @@ const Provider = ({ children }: Props) => {
         setTimeout(() => setOnScroll(false), 1000)
 
     }
-
     return (
         <div className={`provider ${currentTheme ? "light" : "dark"}`} ref={scroll} onScroll={() => getScroll()} >
             <NoticeModal />

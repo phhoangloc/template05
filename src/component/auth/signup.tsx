@@ -33,7 +33,7 @@ const Signup = () => {
             errors.username = `username's lenght is smallest 6 `
         }
         if (username) {
-            const isusername = await fetch(process.env.server_url + "userexist?username=" + username)
+            const isusername = await fetch(process.env.server_url + "checkuser?username=" + username)
                 .then((res) => res.json())
                 .then((data) => data)
             if (isusername) { errors.username = "username is existed" }
@@ -42,7 +42,7 @@ const Signup = () => {
             errors.email = 'email is not valid';
         }
         if (email) {
-            const isEmail = await fetch(process.env.server_url + "userexist?email=" + email)
+            const isEmail = await fetch(process.env.server_url + "checkuser?email=" + email)
                 .then((res) => res.json())
                 .then((data) => data)
             if (isEmail) { errors.email = "email is existed" }

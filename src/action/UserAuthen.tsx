@@ -1,7 +1,7 @@
 
 import axios from "axios"
 const checkLogin = async () => {
-    const result = await axios.get(process.env.server_url + "myuser", {
+    const result = await axios.get(process.env.server_url + "user", {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': localStorage && localStorage.token

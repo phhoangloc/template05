@@ -1,7 +1,7 @@
 
 import axios from "axios"
-const getItem = async (a: string) => {
-    const result = await axios.get(process.env.server_url + `admin/${a}`, {
+const getItem = async (a: string, skip: number | undefined, limit: number | undefined) => {
+    const result = await axios.get(process.env.server_url + `admin/${a}?skip=${skip ? skip : ""}&limit=${limit ? limit : ""}`, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': localStorage && localStorage.token
@@ -46,7 +46,6 @@ const editItem = async (a: string, id: string, body: {}) => {
     })
     return result.data
 }
-
 const uploadFile = async (file: File) => {
     const formData = new FormData()
     formData.append("file", file)
@@ -81,6 +80,15 @@ const deletePic = async (name: string, id: string) => {
     return result.data
 }
 
+const getPicFromUser = async (username: string) => {
+    const result = await axios.get(process.env.server_url + `admin/pic?username=${username}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': localStorage && localStorage.token
+        },
+    })
+    return result.data
+}
 
 export const AdminAuthen = {
     getItem,
@@ -91,4 +99,5 @@ export const AdminAuthen = {
     uploadFile,
     getPic,
     deletePic,
+    getPicFromUser
 }

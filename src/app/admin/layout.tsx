@@ -1,7 +1,7 @@
 import React from 'react'
 import Menu from '@/component/display/menu'
 import Header from '@/component/display/header'
-import ValidateAdmin from '@/component/validate/validateAdmin'
+import ValidateUser from '@/component/validate/validateUser'
 type Props = {
     children: React.ReactNode
 }
@@ -13,7 +13,9 @@ const layout = ({ children }: Props) => {
             <Header admin />
             <div className="main">
                 <Menu admin />
-                <ValidateAdmin>{children}</ValidateAdmin>
+                <ValidateUser>
+                    {children}
+                </ValidateUser>
             </div>
         </div>
     )

@@ -60,7 +60,7 @@ const Header = ({ admin }: Props) => {
                         <PersonIcon onClick={() => setModalOpen(true)} />}
                     {<Divider
                         data={currentUser?._id ? [{ name: "Profile", link: "/admin/profile" }, { name: "Log Out", func: () => { setWannaLogout(true), Logout() } }] : [{ name: "Log In", link: "/login" }, { name: "Sign Up", link: "signup" }]}
-                        sx={{ position: "absolute", top: 55, right: 5, zIndex: 2 }}
+                        sx={{ position: "absolute", top: 55, right: 5, zIndex: 5 }}
                         modalOpen={modalOpen}
                         closeModal={() => setModalOpen(false)} />}
                     {currentTheme ? <DarkModeIcon onClick={() => store.dispatch(setTheme(false))} /> : <LightModeIcon onClick={() => store.dispatch(setTheme(true))} />}
