@@ -9,15 +9,6 @@ const checkLogin = async () => {
     })
     return (result.data)
 }
-const update = async (body: {}) => {
-    const result = await axios.put(process.env.server_url + "myuser", body, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': localStorage && localStorage.token
-        },
-    })
-    return (result.data)
-}
 const uploadFile = async (file: File) => {
     const formData = new FormData()
     formData.append("file", file)
@@ -29,17 +20,6 @@ const uploadFile = async (file: File) => {
     })
     return fileUpload.data
 }
-
-const createCart = async (body: any) => {
-    const result = await axios.post(process.env.server_url + "myuser/cart", body, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': localStorage.token,
-        },
-    })
-    return result.data
-}
-
 const getItem = async (a: string, skip: number | undefined, limit: number | undefined) => {
     const result = await axios.get(process.env.server_url + `user/${a}?skip=${skip ? skip : ""}&limit=${limit ? limit : ""}`, {
         headers: {
@@ -60,7 +40,6 @@ const getPic = async (u: string) => {
     )
     return result.data
 }
-
 const deleteFile = async (name: string, id: string) => {
     const result = await axios.delete(process.env.server_url + `user/pic?name=${name}&id=${id}`,
         {
@@ -72,12 +51,30 @@ const deleteFile = async (name: string, id: string) => {
     )
     return result.data
 }
+const createItem = async (a: string, body: any) => {
+    const result = await axios.post(process.env.server_url + "user/" + a, body, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': localStorage.token,
+        },
+    })
+    return result.data
+}
+const updateItem = async (a: string, id: string, body: any) => {
+    const result = await axios.put(process.env.server_url + "user/" + a + "?id=" + id, body, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': localStorage.token,
+        },
+    })
+    return result.data
+}
 export const UserAuthen = {
     checkLogin,
-    update,
     uploadFile,
-    createCart,
+    createItem,
     getItem,
     getPic,
-    deleteFile
+    deleteFile,
+    updateItem
 }

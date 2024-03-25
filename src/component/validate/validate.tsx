@@ -7,7 +7,7 @@ type Props = {
     children: React.ReactNode
 }
 
-const ValidateUser = ({ children }: Props) => {
+const Validate = ({ children }: Props) => {
     const [currentUser, setCurrentUser] = useState<UserLoginType>(store.getState().user)
 
     const update = () => {
@@ -19,4 +19,4 @@ const ValidateUser = ({ children }: Props) => {
     if (currentUser && (currentUser?.position === "user" || currentUser?.position === "admin")) { return children } return <Archive>you dont have permission to access this page</Archive>
 }
 
-export default ValidateUser
+export default Validate

@@ -16,7 +16,7 @@ const Toogle = ({ func, save }: Props) => {
             <div className="toogle_control">
                 {value ? <div className='toogle_button true' onClick={() => { setValue(false); func && func(false) }}></div> : <div className='toogle_button' onClick={() => { setValue(true); func && func(true) }}></div>}
             </div>
-            {value ? <p onClick={() => { setValue(false), func && func(false), save && save() }} >save</p> : null}
+            {value ? <p onClick={() => { setValue(false), func && func(false), save && save() }} >{save ? "save" : null}</p> : null}
         </div>
     )
 }

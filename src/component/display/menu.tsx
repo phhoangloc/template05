@@ -11,8 +11,10 @@ import ForumIcon from '@mui/icons-material/Forum';
 import ArticleIcon from '@mui/icons-material/Article';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PhotoIcon from '@mui/icons-material/Photo';
+import PersonIcon from '@mui/icons-material/Person';
 import "../style/style.css"
-
+import { UserLoginType } from '@/redux/reducer/UserReduce';
+import HomeIcon from '@mui/icons-material/Home';
 type props = {
     admin?: boolean
 }
@@ -20,9 +22,11 @@ const Menu = ({ admin }: props) => {
     const toPage = useRouter()
 
     const [currentMenu, setCurrentMenu] = useState<boolean>(store.getState().menu)
+    const [currentUser, setCurrentUser] = useState<UserLoginType>(store.getState().user)
 
     const update = () => {
         store.subscribe(() => setCurrentMenu(store.getState().menu))
+        store.subscribe(() => setCurrentUser(store.getState().user))
     }
 
     update()
@@ -31,6 +35,11 @@ const Menu = ({ admin }: props) => {
 
     if (admin) {
         const menus = [
+            {
+                name: "Landing Page",
+                icon: <HomeIcon />,
+                link: "/admin/landingpage",
+            },
             {
                 name: "Dashboard",
                 icon: <DashboardIcon />,
@@ -77,6 +86,11 @@ const Menu = ({ admin }: props) => {
                         link: "/admin/photo"
                     }
                 ]
+            },
+            currentUser?.position === "admin" && {
+                name: "User",
+                icon: <PersonIcon />,
+                link: "/admin/user",
             }
         ]
         return (

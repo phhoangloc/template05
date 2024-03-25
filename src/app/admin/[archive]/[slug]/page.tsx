@@ -6,6 +6,8 @@ import Detail from '@/component/display/detail'
 import React, { useEffect, useState } from 'react'
 import store from '@/redux/store'
 import DetailCreate from '@/component/display/detailCreate'
+import { UserAuthen } from '@/action/UserAuthen'
+import { NoUserAuthen } from '@/action/NoUserAuthen'
 type Props = {
     params: {
         archive: string,
@@ -25,7 +27,7 @@ const page = ({ params }: Props) => {
     const [item, setItem] = useState<any>({})
 
     const getItemBySlug = async (archive: string, slug: string) => {
-        const result = await AdminAuthen.getItemBySlug(archive, slug)
+        const result = await NoUserAuthen.getOneItem(archive, slug)
         setItem(result.data[0])
     }
 

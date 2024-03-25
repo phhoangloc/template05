@@ -251,7 +251,7 @@
 
     .pictureBox {
         width: 90%;
-        height: 90%;
+        max-height: 90%;
         overflow: scroll;
         margin: 2.5% auto;
     }
@@ -316,7 +316,7 @@
             width: 0;
             overflow: hidden;
             margin: inherit;
-
+            height: 50px;
         }
     }
 
@@ -363,6 +363,8 @@
     @media (min-width:768px) {
         width: calc(100vw - 50px);
     }
+
+    .archive_header {}
 }
 
 .archive::-webkit-scrollbar {

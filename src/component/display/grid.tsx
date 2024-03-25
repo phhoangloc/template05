@@ -3,7 +3,6 @@ import "../style/style.css"
 import Box from './box'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { AdminAuthen } from '@/action/AdminAuthen'
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -13,10 +12,12 @@ import { setAlert } from '@/redux/reducer/alertReducer'
 import { AlertType } from '@/redux/reducer/alertReducer'
 import Pagination from './pagination'
 import { UserLoginType } from '@/redux/reducer/UserReduce'
-import PictureModal from '../modal/pictureModal'
 import UploadButton from '../input/uploadButton'
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { UserAuthen } from '@/action/UserAuthen'
+import { AdminAuthen } from '@/action/AdminAuthen'
+import { setRefresh } from '@/redux/reducer/RefreshReduce'
+import { NoUserAuthen } from '@/action/NoUserAuthen'
 
 type Props = {
     children?: React.ReactNode,
@@ -39,34 +40,39 @@ const Grid = ({ children, archive, view, edit }: Props) => {
     const toPage = useRouter()
 
     const [data, setData] = useState<any[]>([])
-    const [pic, setPic] = useState<any[]>([])
     const [number, setNumber] = useState<number>(0)
     const [sum, setSum] = useState<number>(0)
     const [delImages, setDelImages] = useState<string[]>([])
     const [limit, setLimit] = useState<number>(24)
     const [page, setPage] = useState<number>(0)
-    const getItem = async (a: string) => {
-        const result = await UserAuthen.getItem(a, page * limit, limit)
+    const getUser = async (page: number, limit: number) => {
+        const result = await AdminAuthen.getUser(page * limit, limit)
         if (result.success) {
             setData(result.data)
         }
-        const resultCount = await UserAuthen.getItem(a, undefined, undefined)
+        const resultCount = await AdminAuthen.getUser(undefined, undefined)
         if (resultCount.success) {
             setSum(resultCount.data.length)
         }
     }
-    const getPic = async (a: string) => {
-        const result = currentUser?.username && await UserAuthen.getPic(a)
+    const getItem = async (a: string) => {
+        const result = await NoUserAuthen.getItem(a, page * limit, limit)
         if (result.success) {
-            setPic(result.data)
+            setData(result.data)
+        }
+        const resultCount = await NoUserAuthen.getItem(a, undefined, undefined)
+        if (resultCount.success) {
+            setSum(resultCount.data.length)
         }
     }
 
     useEffect(() => {
         archive ? getItem(archive) : null
-        currentUser?.username ? getPic(currentUser.username) : null
     }, [number, page])
 
+    // useEffect(() => {
+    //     currentUser?.position === "admin" && !archive ? getUser(page, limit) : null
+    // }, [number, page])
     const deleleImage = () => {
         store.dispatch(setAlert({ open: true, value: false, msg: "are you sure that you want to delete these image?" }))
     }
@@ -75,7 +81,7 @@ const Grid = ({ children, archive, view, edit }: Props) => {
         await UserAuthen.deleteFile(item?.name, item?._id)
         setNumber(pre => pre + 1)
         store.dispatch(setAlert({ open: false, value: false, msg: "" }))
-
+        store.dispatch(setRefresh())
     }
     useEffect(() => {
         if (currentAlert.value && delImages.length) {
@@ -92,7 +98,7 @@ const Grid = ({ children, archive, view, edit }: Props) => {
             reader.readAsDataURL(file);
             reader.onloadend = async () => {
                 await UserAuthen.uploadFile(file)
-                setNumber(p => p + 1)
+                store.dispatch(setRefresh())
             }
         })
     }
@@ -101,13 +107,15 @@ const Grid = ({ children, archive, view, edit }: Props) => {
         return (
             <>
                 <div className='grid_box'>
-                    {edit ? <Box
-                        sx={{ margin: "0", padding: "5px", width: "100%", cursor: "pointer" }}
-                        bg
-                        onClick={() => toPage.push(archive + "/new" + archive)}
-                    >
-                        <p style={{ height: "30px", lineHeight: "30px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}> + new {archive}</p>
-                    </Box> : null}
+                    {edit ?
+                        <Box
+                            sx={{ margin: "0", padding: "5px", width: "100%", cursor: "pointer" }}
+                            bg
+                            onClick={() => toPage.push(archive + "/new" + archive)}
+                        >
+                            <p style={{ height: "30px", lineHeight: "30px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}> + new {archive}</p>
+                        </Box> :
+                        null}
                     {
                         data?.map((item: any, index: number) =>
                             <Box
@@ -167,17 +175,22 @@ const Grid = ({ children, archive, view, edit }: Props) => {
     if (view === "picture") {
         return (
             <>
-                {edit ? <DeleteIcon onClick={() => deleleImage()} /> : null}
                 <div className='grid_box'>
-                    <Box
+                    {edit ?
+
+                        <Box bg cn='boxShadow' sx={{ borderRadius: "5px", width: "max-content" }}><DeleteIcon onClick={() => deleleImage()} /></Box>
+                        : null}
+                </div>
+                <div className='grid_box'>
+                    {edit ? <Box
                         cn='xs6 sm4 md3 lg2 boxShadow center'
                         bg
                         sx={{ aspectRatio: 1, padding: "10px", borderRadius: "5px", cursor: "pointer" }}
                     >
                         <UploadButton icon={<AddPhotoAlternateIcon />} func={(e) => getFile(e)} />
-                    </Box>
+                    </Box> : null}
                     {
-                        pic?.map((item: any, index: any) =>
+                        currentUser?.pic?.slice(page * limit, page * limit + limit).map((item: any, index: any) =>
                             <Box
                                 cn='xs6 sm4 md3 lg2 boxShadow'
                                 bg
@@ -185,20 +198,21 @@ const Grid = ({ children, archive, view, edit }: Props) => {
                                 sx={{ aspectRatio: 1, padding: "10px", borderRadius: "5px", cursor: "pointer" }}  >
                                 <div style={{ height: "80%", position: "relative", margin: 0 }}>
                                     <Image src={process.env.google_url + item.name} sizes='100%' alt='pic' fill style={{ objectFit: 'cover', borderRadius: "5px" }} priority={true} />
-                                    {delImages.includes(item) ?
+                                    {edit ? delImages.includes(item) ?
                                         <CheckBoxOutlinedIcon
                                             style={{ position: "absolute", zIndex: 3, color: "#0073e6", right: 0, background: "white" }}
                                             onClick={() => setDelImages(prev => prev.filter(i => i !== item))} /> :
                                         <CheckBoxOutlineBlankIcon
                                             style={{ position: "absolute", zIndex: 3, color: "#0073e6", right: 0, background: "white" }}
-                                            onClick={() => setDelImages(prev => [...prev, item])} />}
+                                            onClick={() => setDelImages(prev => [...prev, item])} /> : null
+                                    }
                                 </div>
                                 <p className="center" style={{ textAlign: "center", boxSizing: "border-box", width: "100%", height: "20%", padding: "5px 0", fontSize: "0.85rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.host.username}</p>
                             </Box>
                         )
                     }
                 </div>
-                <Pagination page={page} setPagePre={(p) => setPage(p - 1)} setPageNext={(p) => setPage(p + 1)} allItem={sum} limit={limit} />
+                <Pagination page={page} setPagePre={(p) => setPage(p - 1)} setPageNext={(p) => setPage(p + 1)} allItem={currentUser ? currentUser?.pic?.length : 0} limit={limit} />
             </>
         )
 
@@ -206,8 +220,34 @@ const Grid = ({ children, archive, view, edit }: Props) => {
     if (view === "profile") {
         return (
             <div className="profile">
-                profile
+                {currentUser?.username}
             </div>
+        )
+    }
+    if (view === "user") {
+        return (
+            <>
+                <div className='grid_box'>
+                    {edit ? <Box
+                        sx={{ margin: "0", padding: "5px", width: "100%", cursor: "pointer" }}
+                        bg
+                        onClick={() => toPage.push("new" + archive)}
+                    >
+                        <p style={{ height: "30px", lineHeight: "30px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}> + new {archive}</p>
+                    </Box> : null}
+                    {
+                        data?.map((item: any, index: number) =>
+                            <Box
+                                sx={{ margin: "0", padding: "5px", width: "100%", cursor: "pointer" }}
+                                bg
+                                key={index}
+                                onClick={() => toPage.push(item._id)}>
+                                <p style={{ height: "30px", lineHeight: "30px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.username}</p>
+                            </Box>)
+                    }
+                </div >
+                <Pagination page={page} setPagePre={(p) => setPage(p - 1)} setPageNext={(p) => setPage(p + 1)} allItem={sum} limit={limit} />
+            </>
         )
     }
     return (

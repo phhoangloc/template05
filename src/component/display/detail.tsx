@@ -15,6 +15,8 @@ import { AlertType } from '@/redux/reducer/alertReducer'
 import { setAlert } from '@/redux/reducer/alertReducer'
 import PictureModal from '../modal/pictureModal'
 import { UserLoginType } from '@/redux/reducer/UserReduce'
+import { UserAuthen } from '@/action/UserAuthen'
+
 type Props = {
     genre: string,
     data: any
@@ -37,7 +39,7 @@ const Detail = ({ genre, data }: Props) => {
     const [loading, setLoading] = useState<boolean>(false)
     const [edit, setEdit] = useState<boolean>(false)
     const [name, setName] = useState<string>(data.name)
-    const [title, setTitle] = useState<string>(data.title)
+    const [title, setTitle] = useState<string>()
     const [content, setContent] = useState<string>(data.content)
     const [imgFile, setImgFile] = useState<File>()
     const [imgPreview, setImgPreview] = useState<any>()
@@ -47,8 +49,8 @@ const Detail = ({ genre, data }: Props) => {
     const body = {
         name, title, detail: content, cover
     }
-    const updateItem = async (body: any) => {
-        const result = await AdminAuthen.editItem(genre, data._id, body)
+    const updateItem = async (a: string, id: string, body: any) => {
+        const result = await UserAuthen.updateItem(a, id, body)
         if (result.success) {
             store.dispatch(setRefresh())
         }
@@ -75,7 +77,7 @@ const Detail = ({ genre, data }: Props) => {
             return (
                 <div className='detail'>
                     <div className="detail_header" style={{ margin: "0 10px" }}>
-                        <Toogle func={(v) => setEdit(v)} save={() => updateItem(body)} />
+                        <Toogle func={(v) => setEdit(v)} save={() => updateItem(genre, data._id, body)} />
                     </div>
                     {edit ?
                         <Grid>
@@ -83,12 +85,10 @@ const Detail = ({ genre, data }: Props) => {
                                 <UploadPicturePreview
                                     src={imgPreviewImg && imgPreviewImg || imgPreview?.name && process.env.google_url + imgPreview?.name || process.env.google_url + data?.cover?.name}
                                     icon={<AddPhotoAlternateIcon />}
-                                    func={() => {
-                                        setOpenModal(true)
-                                    }}
+                                    func={() => { setOpenModal(true) }}
                                     loading={loading} />
                                 <PictureModal
-                                    username={currentUser?.username ? currentUser?.username : ""}
+                                    data={currentUser?.pic ? currentUser?.pic : []}
                                     open={openModal}
                                     close={() => setOpenModal(false)}
                                     select={(item) => { setCover(item._id); setImgPreview(item); setOpenModal(false) }}
@@ -101,7 +101,7 @@ const Detail = ({ genre, data }: Props) => {
                                 />
                             </Box>
                             <Box cn='box xs12' bg sx={{ margin: "10px auto", padding: "20px 10px", maxWidth: "992px" }}>
-                                <Input name="title" onChange={e => setTitle(e)} value={title} />
+                                <Input name="title" onChange={e => setName(e)} value={name} />
                                 <TextArea onChange={(e) => setContent(e)} value={data?.detail} name='content' />
                             </Box>
                         </Grid> :
@@ -120,57 +120,7 @@ const Detail = ({ genre, data }: Props) => {
                     }
                 </div>
             )
-        case "watch":
-            return (
-                <div className='detail'>
-                    <div className="detail_header" style={{ margin: "0 10px" }}>
-                        <Toogle func={(v) => setEdit(v)} save={() => updateItem(body)} />
-                    </div>
-                    {edit ?
-                        <Grid>
-                            <Box cn='box xs12 ' sx={{ margin: "10px auto", overflow: "hidden", maxWidth: "992px", position: "relative" }}>
-                                <UploadPicturePreview
-                                    src={imgPreviewImg && imgPreviewImg || imgPreview?.name && process.env.google_url + imgPreview?.name || process.env.google_url + data?.img[data.img.length - 1].name}
-                                    icon={<AddPhotoAlternateIcon />}
-                                    func={() => {
-                                        setOpenModal(true)
-                                    }}
-                                    loading={loading} />
-                                <PictureModal
-                                    username={currentUser?.username ? currentUser?.username : ""}
-                                    open={openModal}
-                                    close={() => setOpenModal(false)}
-                                    select={(item) => { setCover(item._id); setImgPreview(item); setOpenModal(false) }}
-                                    create={(pre, f) => {
-                                        setImgPreviewImg(pre)
-                                        setImgFile(f);
-                                        store.dispatch(setAlert({ value: false, open: true, msg: "bạn có muốn thay đổi hình nền này không?" }));
-                                        setOpenModal(false);
-                                    }}
-                                />
-                            </Box>
-                            <Box cn='box xs12' bg sx={{ margin: "10px auto", padding: "20px 10px", maxWidth: "992px" }}>
-                                <Input name="name" onChange={e => setName(e)} value={name} />
-                                <TextArea onChange={(e) => setContent(e)} value={data?.detail} name='content' />
-                            </Box>
-                        </Grid> :
-                        <Grid>
-                            <Box cn={`center xs12 md6 lg4 boxShadow  ${currentTheme ? "background_light" : "background_dark"}`} sx={{ margin: "auto", borderRadius: "5px" }}>
-                                <Image src={process.env.google_url + data?.img[data.img.length - 1].name} width={500} height={500} alt='cover' style={{ width: "90%", height: "auto", margin: "5% auto 0", borderRadius: "5px" }} />
-                                <h3 style={{ width: "90%", margin: "auto", textAlign: "center", padding: "20px 0", fontSize: "0.9rem" }}>{data?.name}</h3>
-                            </Box>
-                            <Box cn={`detailBox scrollNone  xs12 md6 lg8 `} sx={{ margin: "10px", overflowX: "hidden" }}>
-                                <div className='innerDetail' style={{ textAlign: "justify" }} dangerouslySetInnerHTML={{
-                                    __html: data?.detail
-                                }}
-                                />
-                            </Box>
-                        </Grid>
-                    }
-                </div>
-            )
     }
-
     return <NotFound />
 }
 

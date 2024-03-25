@@ -1,10 +1,12 @@
 'use client'
-import { AdminAuthen } from '@/action/AdminAuthen'
 import NotFound from '@/app/not-found'
 import Login from '@/component/auth/login'
 import Signup from '@/component/auth/signup'
 import Archive from '@/component/display/archive'
+import Box from '@/component/display/box'
 import Grid from '@/component/display/grid'
+import EditIcon from '@mui/icons-material/Edit';
+import CloseIcon from '@mui/icons-material/Close';
 
 import React, { useEffect, useState } from 'react'
 
@@ -15,6 +17,7 @@ type Props = {
 
 const page = ({ params }: Props) => {
 
+
     switch (params.archive) {
         case "login":
             return <Archive><Login /></Archive>
@@ -23,21 +26,25 @@ const page = ({ params }: Props) => {
         case "photo":
             return (
                 <Archive>
-                    <Grid archive={"pic"} view='picture' edit={true} />
+                    <Grid view='picture' edit={true} />
                 </Archive>
             )
-        // case "profile":
-        //     return (
-        //         <Archive>
-        //             <Grid archive={""} view='profile' edit={true} />
-        //         </Archive>)
-        // case "blog":
-        // case "watch":
-        //     return (
-        //         <Archive>
-        //             <Grid archive={params.archive} view='item' edit={true} />
-        //         </Archive>
-        //     )
+        case "user":
+            return (
+                <Archive>
+                    <Grid view='user' />
+                </Archive>)
+        case "profile":
+            return (
+                <Archive>
+                    <Grid view='profile' />
+                </Archive>)
+        case "blog":
+            return (
+                <Archive>
+                    <Grid archive={params.archive} view='item' edit={true} />
+                </Archive>
+            )
     }
 
     return (
