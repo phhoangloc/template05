@@ -14,6 +14,9 @@ import { AlertType } from '@/redux/reducer/alertReducer'
 import Pagination from './pagination'
 import { UserLoginType } from '@/redux/reducer/UserReduce'
 import PictureModal from '../modal/pictureModal'
+import UploadButton from '../input/uploadButton'
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import { UserAuthen } from '@/action/UserAuthen'
 
 type Props = {
     children?: React.ReactNode,
@@ -36,25 +39,32 @@ const Grid = ({ children, archive, view, edit }: Props) => {
     const toPage = useRouter()
 
     const [data, setData] = useState<any[]>([])
+    const [pic, setPic] = useState<any[]>([])
     const [number, setNumber] = useState<number>(0)
     const [sum, setSum] = useState<number>(0)
     const [delImages, setDelImages] = useState<string[]>([])
     const [limit, setLimit] = useState<number>(24)
     const [page, setPage] = useState<number>(0)
     const getItem = async (a: string) => {
-        const result = await AdminAuthen.getItem(a, page * limit, limit)
+        const result = await UserAuthen.getItem(a, page * limit, limit)
         if (result.success) {
             setData(result.data)
         }
-        const resultCount = await AdminAuthen.getItem(a, undefined, undefined)
+        const resultCount = await UserAuthen.getItem(a, undefined, undefined)
         if (resultCount.success) {
             setSum(resultCount.data.length)
         }
     }
-
+    const getPic = async (a: string) => {
+        const result = currentUser?.username && await UserAuthen.getPic(a)
+        if (result.success) {
+            setPic(result.data)
+        }
+    }
 
     useEffect(() => {
         archive ? getItem(archive) : null
+        currentUser?.username ? getPic(currentUser.username) : null
     }, [number, page])
 
     const deleleImage = () => {
@@ -62,11 +72,7 @@ const Grid = ({ children, archive, view, edit }: Props) => {
     }
 
     const deletePic = async (item: any) => {
-        const picOfUser = await AdminAuthen.getPic(item?.host?.username)
-        const newPicsOfUser = picOfUser.data.filter((i: any) => i._id !== item._id)
-        const body = { pic: newPicsOfUser }
-        await AdminAuthen.deletePic(item?.name, item?._id)
-        await AdminAuthen.editItem("user", item?.host?._id, body)
+        await UserAuthen.deleteFile(item?.name, item?._id)
         setNumber(pre => pre + 1)
         store.dispatch(setAlert({ open: false, value: false, msg: "" }))
 
@@ -77,6 +83,19 @@ const Grid = ({ children, archive, view, edit }: Props) => {
         }
         store.dispatch(setAlert({ open: false, value: false, msg: "" }))
     }, [currentAlert.value, delImages])
+
+    const getFile = async (e: any) => {
+        var files = e.target.files;
+        const arrFiles: File[] = Object.values(files)
+        arrFiles.map((file: File) => {
+            var reader: any = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = async () => {
+                await UserAuthen.uploadFile(file)
+                setNumber(p => p + 1)
+            }
+        })
+    }
 
     if (view === "list") {
         return (
@@ -150,14 +169,20 @@ const Grid = ({ children, archive, view, edit }: Props) => {
             <>
                 {edit ? <DeleteIcon onClick={() => deleleImage()} /> : null}
                 <div className='grid_box'>
+                    <Box
+                        cn='xs6 sm4 md3 lg2 boxShadow center'
+                        bg
+                        sx={{ aspectRatio: 1, padding: "10px", borderRadius: "5px", cursor: "pointer" }}
+                    >
+                        <UploadButton icon={<AddPhotoAlternateIcon />} func={(e) => getFile(e)} />
+                    </Box>
                     {
-                        data?.map((item: any, index: any) =>
+                        pic?.map((item: any, index: any) =>
                             <Box
                                 cn='xs6 sm4 md3 lg2 boxShadow'
                                 bg
                                 key={index}
                                 sx={{ aspectRatio: 1, padding: "10px", borderRadius: "5px", cursor: "pointer" }}  >
-
                                 <div style={{ height: "80%", position: "relative", margin: 0 }}>
                                     <Image src={process.env.google_url + item.name} sizes='100%' alt='pic' fill style={{ objectFit: 'cover', borderRadius: "5px" }} priority={true} />
                                     {delImages.includes(item) ?
@@ -168,9 +193,9 @@ const Grid = ({ children, archive, view, edit }: Props) => {
                                             style={{ position: "absolute", zIndex: 3, color: "#0073e6", right: 0, background: "white" }}
                                             onClick={() => setDelImages(prev => [...prev, item])} />}
                                 </div>
-
                                 <p className="center" style={{ textAlign: "center", boxSizing: "border-box", width: "100%", height: "20%", padding: "5px 0", fontSize: "0.85rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.host.username}</p>
-                            </Box>)
+                            </Box>
+                        )
                     }
                 </div>
                 <Pagination page={page} setPagePre={(p) => setPage(p - 1)} setPageNext={(p) => setPage(p + 1)} allItem={sum} limit={limit} />

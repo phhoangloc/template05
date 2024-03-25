@@ -23,8 +23,9 @@ const page = ({ params }: Props) => {
         case "photo":
             return (
                 <Archive>
-                    {/* <Grid archive={"pic"} view='picture' edit={true} /> */}pic
-                </Archive>)
+                    <Grid archive={"pic"} view='picture' edit={true} />
+                </Archive>
+            )
         // case "profile":
         //     return (
         //         <Archive>

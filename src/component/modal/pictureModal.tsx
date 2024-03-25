@@ -35,6 +35,7 @@ const PictureModal = ({ username, open, close, select, create }: Props) => {
     useEffect(() => {
         username && getPicFromUser(username)
     }, [username])
+
     return (
         <div className='pictureModal' style={{ display: open ? "block" : "none" }}>
             <CloseIcon onClick={() => close && close()} style={{ position: "absolute", right: "5px", top: "5px", zIndex: 2 }} />

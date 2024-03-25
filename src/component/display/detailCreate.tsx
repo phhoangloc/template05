@@ -74,12 +74,14 @@ const DetailCreate = ({ genre }: Props) => {
                             <Input name="slug" value={slug} onChange={(e) => setSlug(e)} />
                         </Box>
                         <Box cn='box xs12 ' sx={{ margin: "10px auto", overflow: "hidden", maxWidth: "992px" }}>
-                            <UploadPicturePreview icon={sync ? <SyncIcon /> : <AddPhotoAlternateIcon />}
+                            {/* <UploadPicturePreview
+                                icon={sync ? <SyncIcon /> : <AddPhotoAlternateIcon />}
                                 func={(f) => {
                                     setImgFile(f);
                                     store.dispatch(setAlert({ value: false, open: true, msg: "bạn có muốn thay đổi hình nền này không?" }))
                                 }}
-                            />
+                            /> */}
+                            hello
                         </Box>
                         <Box cn='box xs12' bg sx={{ margin: "10px auto", padding: "20px 10px", maxWidth: "992px" }}>
                             <Input name="title" onChange={e => setTitle(e)} value={title} />
